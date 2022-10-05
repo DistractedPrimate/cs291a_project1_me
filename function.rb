@@ -64,10 +64,15 @@ def main(event:, context:)
       return response(body: nil, status: 422)
     end
 
-    if event["headers"]["content-type"] != 'application/json'
-      return response(body: nil, status: 415)
+    upcase_content = 
+    event["headers"].each do |key, value|
+      if key.upcase == "CONTENT-TYPE"
+        if value != 'application/json'
+          return response(body: nil, status: 415)
+        end
+      end
     end
-
+  
     if event.key?("headers") and event["headers"].key?("Content-Type") and event["headers"]["Content-Type"] != 'application/json'
       return response(body: nil, status: 415)
     end
