@@ -63,17 +63,19 @@ def main(event:, context:)
     if !valid_json?(event["body"])
       return response(body: nil, status: 422)
     end
-
+    
+    content = false
     event["headers"].each do |key, value|
-      if key.upcase == "CONTENT-TYPE"
+      if key.downcase == 'content-type'
+        content = true
         if value != 'application/json'
           return response(body: nil, status: 415)
         end
       end
     end
-  
-    if event.key?("headers") and event["headers"].key?("Content-Type") and event["headers"]["Content-Type"] != 'application/json'
-      return response(body: nil, status: 415)
+
+    if !content
+      return response(status: 415)
     end
     
     jsonData = JSON.parse(event["body"])
@@ -107,7 +109,7 @@ if $PROGRAM_NAME == __FILE__
   # Call /token
   PP.pp main(context: {}, event: {
                'body' => '{"name": "bboe"}',
-               'headers' => { 'Content-Type' => 'application/json' },
+               'headers' => { 'CondTenT-Type' => 'applisscation/json' },
                'httpMethod' => 'POST',
                'path' => '/token'
              })
