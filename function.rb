@@ -64,7 +64,7 @@ def main(event:, context:)
       return response(body: nil, status: 422)
     end
 
-    if event.key?("headers") and event["headers"].key?("Content-Type") and event["Headers"]["Content-Type"] != 'application/json'
+    if event.key?("headers") and event["headers"].key?("Content-Type") and event["headers"]["Content-Type"] != 'application/json'
       return response(body: nil, status: 415)
     end
     
