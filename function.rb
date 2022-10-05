@@ -64,7 +64,6 @@ def main(event:, context:)
       return response(body: nil, status: 422)
     end
 
-    upcase_content = 
     event["headers"].each do |key, value|
       if key.upcase == "CONTENT-TYPE"
         if value != 'application/json'
