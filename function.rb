@@ -48,7 +48,7 @@ def main(event:, context:)
     decoded_value = decoded_token[0]['data']
     return response(body: decoded_value, status: 200)
   
-  elsif event['path'] == '/token'
+  elsif event['path'] == '/auth/token'
     if httpMethod != 'POST'
       return response(body: event, status: 405)
     end
