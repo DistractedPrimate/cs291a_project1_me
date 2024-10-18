@@ -9,11 +9,11 @@ def valid_json?(string)
 end
 
 def main(event:, context:)
+  puts "Starting main method"
   # You shouldn't need to use context, but its fields are explained here:
   # https://docs.aws.amazon.com/lambda/latest/dg/ruby-context.html
 
   httpMethod = event['httpMethod']
-
   # get method
   if event['path'] == '/'
     if httpMethod != 'GET'
@@ -49,6 +49,7 @@ def main(event:, context:)
     return response(body: decoded_value, status: 200)
   
   elsif event['path'] == '/auth/token'
+    puts "hello"
     if httpMethod != 'POST'
       return response(body: event, status: 405)
     end
@@ -79,6 +80,7 @@ def main(event:, context:)
     end
     
     jsonData = JSON.parse(event["body"])
+    puts jsonData
     payload = {
       data: jsonData,
       exp: Time.now.to_i + 5,
@@ -109,9 +111,9 @@ if $PROGRAM_NAME == __FILE__
   # Call /token
   PP.pp main(context: {}, event: {
                'body' => '{"name": "bboe"}',
-               'headers' => { 'CondTenT-Type' => 'applisscation/json' },
+               'headers' => { 'Content-Type' => 'application/json' },
                'httpMethod' => 'POST',
-               'path' => '/token'
+               'path' => '/auth/token'
              })
 
   # Generate a token
@@ -120,6 +122,7 @@ if $PROGRAM_NAME == __FILE__
     exp: Time.now.to_i + 1,
     nbf: Time.now.to_i
   }
+
   token = JWT.encode payload, ENV['JWT_SECRET'], 'HS256'
   # Call /
   PP.pp main(context: {}, event: {
